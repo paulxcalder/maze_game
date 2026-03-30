@@ -1,0 +1,1 @@
+gcc graphic.c -lraylib -lopengl32 -lgdi32 -lwinmm -o test.exe
