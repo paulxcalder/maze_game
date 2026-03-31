@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
-
+#include "labyrinth.h"
 typedef unsigned short size_l;
 
 char **map = NULL; //двумерный список
@@ -138,20 +138,20 @@ void print_lab(){
     }
 }
 
-int main(){
-    srand(time(NULL));//генератор случайных чисел
+// int main(){
+//     srand(time(NULL));//генератор случайных чисел
 
-    printf("Height: "); //запрос высоты
-    scanf("%hu", &height);
+//     printf("Height: "); //запрос высоты
+//     scanf("%hu", &height);
     
-    printf("Width: "); //запрос ширины
-    scanf("%hu", &width);   
+//     printf("Width: "); //запрос ширины
+//     scanf("%hu", &width);   
     
-    generate_lab(); //запрос генерируем лабиринт
-    while(!find_way(1, 1)){ //если мы не нашли выход
-        free_lab(); //очищаем и генерируем заново
-        generate_lab();
-    }
-    print_lab(); //печатаем
-    return 0;
-}
+//     generate_lab(); //запрос генерируем лабиринт
+//     while(!find_way(1, 1)){ //если мы не нашли выход
+//         free_lab(); //очищаем и генерируем заново
+//         generate_lab();
+//     }
+//     print_lab(); //печатаем
+//     return 0;
+// }
