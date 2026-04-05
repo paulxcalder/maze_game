@@ -8,10 +8,15 @@ extern size_l width;
 extern size_l height;
 extern size_l x_end;
 extern size_l y_end;
+extern char wall;
+extern char way;
+extern char right_way;
+extern char visited;
 
 char generate_lab();
 char find_way(size_l x, size_l y);
 void print_lab();
 void free_lab();
+void reset_path_marks(); 
 
 #endif
