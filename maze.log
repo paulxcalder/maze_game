@@ -1,0 +1,7 @@
+[2026-04-14 14:43:14] [INFO] Application started
+[2026-04-14 14:43:41] [INFO] User logged in: test1
+[2026-04-14 14:43:53] [INFO] generate_lab: labyrinth generated successfully
+[2026-04-14 14:43:53] [INFO] Labyrinth 15x30 generated, user=test1
+[2026-04-14 14:43:55] [INFO] Entering PLAYING screen
+[2026-04-14 14:44:10] [INFO] User test1 reached the exit!
+[2026-04-14 14:44:12] [INFO] Application shutdown

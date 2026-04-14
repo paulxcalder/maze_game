@@ -2,6 +2,8 @@
 #include <stdlib.h>
 #include <time.h>
 #include "labyrinth.h"
+#include "error.h"
+
 typedef unsigned short size_l;
 
 char **map = NULL;
@@ -54,82 +56,86 @@ char find_way(size_l x, size_l y){
     return 0;
 }
 
-char generate_lab(){
-    if(height <= 2 || width <= 2){
+char generate_lab()
+{
+    if (height <= 2 || width <= 2)
+    {
+        log_error("generate_lab: size too small (width or height <= 2)");
         printf("Incorrect size!\n");
         return 0;
     }
-
-    map = (char**)malloc(height * sizeof(char*));
-    if(map == NULL){
+ 
+    map = (char **)malloc(height * sizeof(char *));
+    if (map == NULL)
+    {
+        log_error("generate_lab: malloc failed for map rows");
         printf("Memory allocation error!\n");
         return -1;
     }
-
+ 
     char flag = 0;
-    for(size_l i = 0; i < height; i++){
-        map[i] = (char*)malloc(width * sizeof(char));
-        if(map[i] == NULL){
-            printf("Incorrect size!\n");
+    for (size_l i = 0; i < height; i++)
+    {
+        map[i] = (char *)malloc(width * sizeof(char));
+        if (map[i] == NULL)
+        {
+            log_error("generate_lab: malloc failed for map row");
             free_lab();
             return -1;
         }
-
-        for(size_l j = 0; j < width; j++){
-            if(i == 0 || i == height - 1 || j == 0 || j == width - 1){
+ 
+        for (size_l j = 0; j < width; j++)
+        {
+            if (i == 0 || i == height-1 || j == 0 || j == width-1)
                 map[i][j] = wall;
-            }
-            else if(((i + j) & 1) == 0 && flag){
+            else if (((i + j) & 1) == 0 && flag)
                 map[i][j] = way;
-            }
-            else{
+            else
                 map[i][j] = wall;
-            }
         }
         flag = (flag + 1) & 1;
     }
-
-    for(size_l i = 1; i < height - 1; i += 2){
-        for(size_l j = 1; j < width - 1; j += 2){
+ 
+    for (size_l i = 1; i < height-1; i += 2)
+    {
+        for (size_l j = 1; j < width-1; j += 2)
+        {
             flag = 1;
-            while(flag){
-                if(i == 1 && j == width - 2){
-                    flag = 0;
+            while (flag)
+            {
+                if (i == 1 && j == width-2) { flag = 0; }
+                else if ((rand() & 1) == 1)
+                {
+                    if (j + 2 < width) { map[i][j+1] = way; flag = 0; }
                 }
-                else if((rand() & 1) == 1){
-                    if(j + 2 < width){
-                        map[i][j+1] = way;
-                        flag = 0;
-                    }
+                else
+                {
+                    if (i > 1) { map[i-1][j] = way; flag = 0; }
                 }
-                else{
-                    if(i > 1){
-                        map[i-1][j] = way;
-                        flag = 0;
-                    }
-                }
-                if(i == height - 3 && (rand() & 1) == 1){
+                if (i == height-3 && (rand() & 1) == 1)
                     map[i+1][j] = way;
-                }
             }
         }
     }
-
+ 
     flag = 1;
-    for(size_l j = 1; j < width - 1; j++){
-        if(map[height - 2][j] == way){
-            map[height - 2][j] = right_way;
-            x_end = j;
-            y_end = height - 2;
+    for (size_l j = 1; j < width-1; j++)
+    {
+        if (map[height-2][j] == way)
+        {
+            map[height-2][j] = right_way;
+            x_end = j; y_end = height-2;
             flag = 0;
             break;
         }
     }
-    if(flag){
-        map[height - 2][1] = right_way;
-        x_end = 1;
-        y_end = height - 2;
+    if (flag)
+    {
+        map[height-2][1] = right_way;
+        x_end = 1; y_end = height-2;
     }
+ 
+    log_info("generate_lab: labyrinth generated successfully");
     return 1;
 }
 
