@@ -1,1 +1,1 @@
-gcc main.c graphic.c labyrinth.c error.c -lraylib -lopengl32 -lgdi32 -lwinmm -o test.exe
+gcc main.c graphic.c labyrinth.c error.c db.c -lraylib -lopengl32 -lgdi32 -lwinmm -o test.exe

@@ -8,7 +8,6 @@
 
 int main(void)
 {
-    srand(time(NULL));
     RunMazeGenerator();
     return 0;
 }
