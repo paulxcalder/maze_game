@@ -5,9 +5,10 @@
 #include <stdlib.h>
 #include "labyrinth.h"
 #include "error.h"
+#include "db.h"
 
 int main(void)
-{
+{   
     RunMazeGenerator();
     return 0;
 }

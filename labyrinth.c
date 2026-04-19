@@ -107,7 +107,7 @@ char **generate_lab(long long seed, size_l width, size_l height){
                     }
                 }
             }
-            need_cell = (need_cell + 1) & 1;
+            need_cell = !need_cell;
         }
 
         need_cell = 1;
