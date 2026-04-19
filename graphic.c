@@ -97,10 +97,10 @@ static void DrawMenu(Font font, Screen *screen)
     DrawTextEx(font, "MAZE GENERATOR", (Vector2){(1920 - ts.x) * 0.5f, 110}, 88, 1, WHITE);
 
     Rectangle btnStart = {(1920 - 320) * 0.5f, 360, 320, 64};
-    Rectangle btnHelp  = {(1920 - 320) * 0.5f, 440, 320, 64};
+    Rectangle btnHelp = {(1920 - 320) * 0.5f, 440, 320, 64};
     Rectangle btnAbout = {(1920 - 320) * 0.5f, 520, 320, 64};
-    Rectangle btnLead  = {(1920 - 320) * 0.5f, 600, 320, 64};
-    Rectangle btnExit  = {(1920 - 320) * 0.5f, 680, 320, 64};
+    Rectangle btnLead = {(1920 - 320) * 0.5f, 600, 320, 64};
+    Rectangle btnExit = {(1920 - 320) * 0.5f, 680, 320, 64};
 
     Vector2 m = GetMousePosition();
 
@@ -109,27 +109,21 @@ static void DrawMenu(Font font, Screen *screen)
     DrawRectangleRec(btnStart, hotStart ? (Color){15,55,140,255} : (Color){10,40,100,255});
     DrawRectangleLinesEx(btnStart, 2, hotStart ? WHITE : (Color){60,120,255,255});
     Vector2 st = MeasureTextEx(font, "ИГРАТЬ", 28, 1);
-    DrawTextEx(font, "ИГРАТЬ",
-               (Vector2){btnStart.x + (btnStart.width  - st.x) * 0.5f,
-                         btnStart.y + (btnStart.height - st.y) * 0.5f},
-               28, 1, WHITE);
+    DrawTextEx(font, "ИГРАТЬ",(Vector2){btnStart.x + (btnStart.width - st.x) * 0.5f,btnStart.y + (btnStart.height - st.y) * 0.5f},28, 1, WHITE);
+
     if (hotStart && IsMouseButtonPressed(MOUSE_LEFT_BUTTON))
     {
         login_name[0] = '\0';
-        login_len     = 0;
-        login_error   = 0;
+        login_len = 0;
+        login_error = 0;
         *screen = LOGIN;
     }
-
     //помощь
     int hotHelp = CheckCollisionPointRec(m, btnHelp);
     DrawRectangleRec(btnHelp, hotHelp ? (Color){20,80,90,255} : (Color){14,58,68,255});
     DrawRectangleLinesEx(btnHelp, 2, hotHelp ? WHITE : (Color){40,190,210,255});
     Vector2 ht = MeasureTextEx(font, "ПОМОЩЬ", 28, 1);
-    DrawTextEx(font, "ПОМОЩЬ",
-               (Vector2){btnHelp.x + (btnHelp.width  - ht.x) * 0.5f,
-                         btnHelp.y + (btnHelp.height - ht.y) * 0.5f},
-               28, 1, WHITE);
+    DrawTextEx(font, "ПОМОЩЬ",(Vector2){btnHelp.x + (btnHelp.width - ht.x) * 0.5f,btnHelp.y + (btnHelp.height - ht.y) * 0.5f},28, 1, WHITE);
     if (hotHelp && IsMouseButtonPressed(MOUSE_LEFT_BUTTON)) *screen = HELP;
 
     //справка
@@ -137,10 +131,7 @@ static void DrawMenu(Font font, Screen *screen)
     DrawRectangleRec(btnAbout, hotAbout ? (Color){80,35,110,255} : (Color){60,25,85,255});
     DrawRectangleLinesEx(btnAbout, 2, hotAbout ? WHITE : (Color){170,80,255,255});
     Vector2 at = MeasureTextEx(font, "СПРАВКА", 28, 1);
-    DrawTextEx(font, "СПРАВКА",
-               (Vector2){btnAbout.x + (btnAbout.width  - at.x) * 0.5f,
-                         btnAbout.y + (btnAbout.height - at.y) * 0.5f},
-               28, 1, WHITE);
+    DrawTextEx(font, "СПРАВКА",(Vector2){btnAbout.x + (btnAbout.width - at.x) * 0.5f,btnAbout.y + (btnAbout.height - at.y) * 0.5f},28, 1, WHITE);
     if (hotAbout && IsMouseButtonPressed(MOUSE_LEFT_BUTTON)) *screen = ABOUT;
 
     //лидеры
@@ -148,10 +139,7 @@ static void DrawMenu(Font font, Screen *screen)
     DrawRectangleRec(btnLead, hotLead ? (Color){100,70,15,255} : (Color){75,50,10,255});
     DrawRectangleLinesEx(btnLead, 2, hotLead ? WHITE : (Color){255,180,30,255});
     Vector2 ld = MeasureTextEx(font, "ЛИДЕРЫ", 28, 1);
-    DrawTextEx(font, "ЛИДЕРЫ",
-               (Vector2){btnLead.x + (btnLead.width  - ld.x) * 0.5f,
-                         btnLead.y + (btnLead.height - ld.y) * 0.5f},
-               28, 1, WHITE);
+    DrawTextEx(font, "ЛИДЕРЫ",(Vector2){btnLead.x + (btnLead.width  - ld.x) * 0.5f,btnLead.y + (btnLead.height - ld.y) * 0.5f},28, 1, WHITE);
     if (hotLead && IsMouseButtonPressed(MOUSE_LEFT_BUTTON)) *screen = LEADERBOARD;
 
     //выход
@@ -159,10 +147,8 @@ static void DrawMenu(Font font, Screen *screen)
     DrawRectangleRec(btnExit, hotExit ? (Color){120,20,20,255} : (Color){90,15,15,255});
     DrawRectangleLinesEx(btnExit, 2, hotExit ? WHITE : (Color){220,60,60,255});
     Vector2 et = MeasureTextEx(font, "ВЫХОД", 28, 1);
-    DrawTextEx(font, "ВЫХОД",
-               (Vector2){btnExit.x + (btnExit.width  - et.x) * 0.5f,
-                         btnExit.y + (btnExit.height - et.y) * 0.5f},
-               28, 1, WHITE);
+    DrawTextEx(font, "ВЫХОД",(Vector2){btnExit.x + (btnExit.width  - et.x) * 0.5f,btnExit.y + (btnExit.height - et.y) * 0.5f},28, 1, WHITE);
+
     if (hotExit && IsMouseButtonPressed(MOUSE_LEFT_BUTTON))
     {
         log_info("Application closed by user via menu");
@@ -170,7 +156,6 @@ static void DrawMenu(Font font, Screen *screen)
         CloseWindow();
     }
 }
-
 
 //логин
 static void DrawLogin(Font font, Screen *screen)
@@ -185,15 +170,13 @@ static void DrawLogin(Font font, Screen *screen)
 
     // заголовок
     Vector2 ts = MeasureTextEx(font, "ВХОД В ИГРУ", 52, 1);
-    DrawTextEx(font, "ВХОД В ИГРУ",
-               (Vector2){(1920 - ts.x) * 0.5f, 200}, 52, 1, WHITE);
+    DrawTextEx(font, "ВХОД В ИГРУ",(Vector2){(1920 - ts.x) * 0.5f, 200}, 52, 1, WHITE);
     DrawRectangle(1920/2 - 280, 268, 560, 2, (Color){60,120,255,80});
 
     Vector2 ss = MeasureTextEx(font, "Введите ваш уникальный логин", 26, 1);
-    DrawTextEx(font, "Введите ваш уникальный логин",
-               (Vector2){(1920 - ss.x) * 0.5f, 390}, 26, 1, LIGHTGRAY);
-
+    DrawTextEx(font, "Введите ваш уникальный логин",(Vector2){(1920 - ss.x) * 0.5f, 390}, 26, 1, LIGHTGRAY);
     // поле ввода
+
     DrawRectangleRec(inputBox, (Color){15, 15, 32, 255});
     DrawRectangleLinesEx(inputBox, 2, (Color){60, 120, 255, 255});
 
@@ -209,16 +192,12 @@ static void DrawLogin(Font font, Screen *screen)
     Vector2 lt = MeasureTextEx(font, displayBuf, 28, 1);
     float tx = inputBox.x + (inputBox.width - lt.x) * 0.5f;
     if (tx < inputBox.x + 10) tx = inputBox.x + 10;
-    DrawTextEx(font, displayBuf,
-               (Vector2){tx, inputBox.y + (inputBox.height - lt.y) * 0.5f},
-               28, 1, (Color){80, 200, 120, 255});
+    DrawTextEx(font, displayBuf,(Vector2){tx, inputBox.y + (inputBox.height - lt.y) * 0.5f},28, 1, (Color){80, 200, 120, 255});
 
     // подсказка
-    DrawTextEx(font, "Только латинские буквы и цифры, до 32 символов",
-               (Vector2){inputBox.x, inputBox.y + inputBox.height + 10},
-               16, 1, (Color){80, 80, 110, 255});
+    DrawTextEx(font, "Только латинские буквы и цифры, до 32 символов",(Vector2){inputBox.x, inputBox.y + inputBox.height + 10},16, 1, (Color){80, 80, 110, 255});
 
-    // ввод с клавиатуры (ASCII 33-126, без пробела)
+    // ввод с клавиатуры (ASCII)
     int key = GetCharPressed();
     while (key > 0)
     {
@@ -241,10 +220,7 @@ static void DrawLogin(Font font, Screen *screen)
     DrawRectangleRec(confirmBtn, hotConf ? (Color){15,55,140,255} : (Color){10,40,100,255});
     DrawRectangleLinesEx(confirmBtn, 2, hotConf ? WHITE : (Color){60,120,255,255});
     Vector2 ct = MeasureTextEx(font, "ПРОДОЛЖИТЬ", 24, 1);
-    DrawTextEx(font, "ПРОДОЛЖИТЬ",
-               (Vector2){confirmBtn.x + (confirmBtn.width  - ct.x) * 0.5f,
-                         confirmBtn.y + (confirmBtn.height - ct.y) * 0.5f},
-               24, 1, WHITE);
+    DrawTextEx(font, "ПРОДОЛЖИТЬ",(Vector2){confirmBtn.x + (confirmBtn.width  - ct.x) * 0.5f, confirmBtn.y + (confirmBtn.height - ct.y) * 0.5f},24, 1, WHITE);
 
     int doConfirm = (hotConf && IsMouseButtonPressed(MOUSE_LEFT_BUTTON))|| IsKeyPressed(KEY_ENTER);
     if (doConfirm)
@@ -273,15 +249,13 @@ static void DrawLogin(Font font, Screen *screen)
                    22, 1, RED);
     }
 
-    // live-превью логина
+    // приветсвие
     if (login_len > 0 && !login_error)
     {
         char greet[64];
         snprintf(greet, sizeof(greet), "Привет, %s!", login_name);
         Vector2 gt = MeasureTextEx(font, greet, 20, 1);
-        DrawTextEx(font, greet,
-                   (Vector2){(1920 - gt.x) * 0.5f, confirmBtn.y + confirmBtn.height + 18},
-                   20, 1, (Color){60, 180, 100, 200});
+        DrawTextEx(font, greet,(Vector2){(1920 - gt.x) * 0.5f, confirmBtn.y + confirmBtn.height + 18},20, 1, (Color){60, 180, 100, 200});
     }
 }
 
@@ -310,10 +284,7 @@ static void DrawModeSelect(Font font, Screen *screen)
     DrawRectangleRec(btnSolo, hotSolo ? (Color){15,55,140,255} : (Color){10,40,100,255});
     DrawRectangleLinesEx(btnSolo, 2, hotSolo ? WHITE : (Color){60,120,255,255});
     Vector2 s1 = MeasureTextEx(font, "В ОДИНОЧКУ", 28, 1);
-    DrawTextEx(font, "В ОДИНОЧКУ",
-               (Vector2){btnSolo.x + (btnSolo.width - s1.x) * 0.5f,
-                         btnSolo.y + (btnSolo.height - s1.y) * 0.5f},
-               28, 1, WHITE);
+    DrawTextEx(font, "В ОДИНОЧКУ",(Vector2){btnSolo.x + (btnSolo.width - s1.x) * 0.5f, btnSolo.y + (btnSolo.height - s1.y) * 0.5f},28, 1, WHITE);
     if (hotSolo && IsMouseButtonPressed(MOUSE_LEFT_BUTTON)) *screen = GAME;
 
 
@@ -321,10 +292,7 @@ static void DrawModeSelect(Font font, Screen *screen)
     DrawRectangleRec(btnKey, hotKey ? (Color){20,80,90,255} : (Color){14,58,68,255});
     DrawRectangleLinesEx(btnKey, 2, hotKey ? WHITE : (Color){40,190,210,255});
     Vector2 s3 = MeasureTextEx(font, "ВВЕСТИ КЛЮЧ", 28, 1);
-    DrawTextEx(font, "ВВЕСТИ КЛЮЧ",
-               (Vector2){btnKey.x + (btnKey.width  - s3.x) * 0.5f,
-                         btnKey.y + (btnKey.height - s3.y) * 0.5f},
-               28, 1, WHITE);
+    DrawTextEx(font, "ВВЕСТИ КЛЮЧ",(Vector2){btnKey.x + (btnKey.width  - s3.x) * 0.5f,btnKey.y + (btnKey.height - s3.y) * 0.5f},28, 1, WHITE);
     if (hotKey && IsMouseButtonPressed(MOUSE_LEFT_BUTTON)) *screen = KEY_INPUT;
 }
 
@@ -332,10 +300,10 @@ static void DrawModeSelect(Font font, Screen *screen)
 //параметры лабиринта от польователя
 static void DrawGame(Font font, Screen *screen,int *inputW, int *inputH,int *active, int *px, int *py, int *errorFlag)
 {
-    Rectangle backBtn   = {20,   20,  170, 44};
-    Rectangle widthBox  = {384,  238, 220, 52};
+    Rectangle backBtn = {20, 20, 170, 44};
+    Rectangle widthBox = {384, 238, 220, 52};
     Rectangle heightBox = {1152, 238, 220, 52};
-    Rectangle genBtn    = {810,  410, 300, 62};
+    Rectangle genBtn = {810, 410, 300, 62};
 
     Vector2 m = GetMousePosition();
 
@@ -353,7 +321,7 @@ static void DrawGame(Font font, Screen *screen,int *inputW, int *inputH,int *act
                 current_seed = (unsigned int)time(NULL);
                 srand(current_seed);
 
-                // синхронная генерация — после неё запускается анимация прогресс-бара
+                // синхронная генерация
                 int ok = 0;
                 for (int attempt = 0; attempt < 200 && !ok; attempt++)
                 {
@@ -394,8 +362,10 @@ static void DrawGame(Font font, Screen *screen,int *inputW, int *inputH,int *act
     {
         if (key >= '0' && key <= '9')
         {
-            if (*active == 0) { int v = (*inputW)*10+(key-'0'); *inputW = (v>100)?0:v; }
-            if (*active == 1) { int v = (*inputH)*10+(key-'0'); *inputH = (v>100)?0:v; }
+            if (*active == 0) { int v = (*inputW)*10+(key-'0'); 
+                *inputW = (v>100)?0:v;}
+            if (*active == 1) { int v = (*inputH)*10+(key-'0'); 
+                *inputH = (v>100)?0:v;}
         }
         key = GetCharPressed();
     }
@@ -417,31 +387,24 @@ static void DrawGame(Font font, Screen *screen,int *inputW, int *inputH,int *act
 
     DrawRectangleLinesEx(widthBox,  2, *active == 0 ? BLUE : GRAY);
     DrawRectangleLinesEx(heightBox, 2, *active == 1 ? BLUE : GRAY);
-    DrawTextEx(font, TextFormat("%d", *inputW),
-               (Vector2){widthBox.x  + 12, widthBox.y  + 13}, 26, 1, GREEN);
-    DrawTextEx(font, TextFormat("%d", *inputH),
-               (Vector2){heightBox.x + 12, heightBox.y + 13}, 26, 1, GREEN);
+    DrawTextEx(font, TextFormat("%d", *inputW),(Vector2){widthBox.x + 12, widthBox.y + 13}, 26, 1, GREEN);
+    DrawTextEx(font, TextFormat("%d", *inputH),(Vector2){heightBox.x + 12, heightBox.y + 13}, 26, 1, GREEN);
 
     int hotGen = CheckCollisionPointRec(m, genBtn);
     DrawRectangleRec(genBtn, hotGen ? (Color){15,80,28,255} : (Color){8,55,18,255});
     DrawRectangleLinesEx(genBtn, 2, hotGen ? WHITE : (Color){50,200,80,255});
     Vector2 gt = MeasureTextEx(font, "СГЕНЕРИРОВАТЬ", 24, 1);
-    DrawTextEx(font, "СГЕНЕРИРОВАТЬ",
-               (Vector2){genBtn.x + (genBtn.width  - gt.x) * 0.5f,
-                         genBtn.y + (genBtn.height - gt.y) * 0.5f},
-               24, 1, WHITE);
+    DrawTextEx(font, "СГЕНЕРИРОВАТЬ",(Vector2){genBtn.x + (genBtn.width  - gt.x) * 0.5f,genBtn.y + (genBtn.height - gt.y) * 0.5f},24, 1, WHITE);
 
     if (*errorFlag == 1)
     {
         Vector2 errt = MeasureTextEx(font, "Размер должен быть не менее 3!", 22, 1);
-        DrawTextEx(font, "Размер должен быть не менее 3!",
-                   (Vector2){(1920 - errt.x) * 0.5f, 500}, 22, 1, RED);
+        DrawTextEx(font, "Размер должен быть не менее 3!",(Vector2){(1920 - errt.x) * 0.5f, 500}, 22, 1, RED);
     }
     else if (*errorFlag == 2)
     {
         Vector2 errt = MeasureTextEx(font, "Не удалось создать лабиринт. Попробуйте другой размер.", 22, 1);
-        DrawTextEx(font, "Не удалось создать лабиринт. Попробуйте другой размер.",
-                   (Vector2){(1920 - errt.x) * 0.5f, 500}, 22, 1, RED);
+        DrawTextEx(font, "Не удалось создать лабиринт. Попробуйте другой размер.",(Vector2){(1920 - errt.x) * 0.5f, 500}, 22, 1, RED);
     }
 }
 
@@ -455,14 +418,12 @@ static void DrawGenerating(Font font, Screen *screen, int *px, int *py)
     if (progress > 1.0f) progress = 1.0f;
 
     Vector2 ts = MeasureTextEx(font, "ГЕНЕРАЦИЯ ЛАБИРИНТА", 48, 1);
-    DrawTextEx(font, "ГЕНЕРАЦИЯ ЛАБИРИНТА",
-               (Vector2){(1920 - ts.x) * 0.5f, 340}, 48, 1, WHITE);
+    DrawTextEx(font, "ГЕНЕРАЦИЯ ЛАБИРИНТА",(Vector2){(1920 - ts.x) * 0.5f, 340}, 48, 1, WHITE);
 
     char nameLabel[48];
     snprintf(nameLabel, sizeof(nameLabel), "Игрок: %s", login_name);
     Vector2 nl = MeasureTextEx(font, nameLabel, 22, 1);
-    DrawTextEx(font, nameLabel,
-               (Vector2){(1920 - nl.x) * 0.5f, 412}, 22, 1, (Color){80,180,120,210});
+    DrawTextEx(font, nameLabel,(Vector2){(1920 - nl.x) * 0.5f, 412}, 22, 1, (Color){80,180,120,210});
 
     float barW = 720.0f, barH = 46.0f;
     float barX = (1920 - barW) * 0.5f;
@@ -472,21 +433,17 @@ static void DrawGenerating(Font font, Screen *screen, int *px, int *py)
 
     int fillW = (int)(barW * progress);
     if (fillW > 0)
-        DrawRectangleGradientH((int)barX, (int)barY, fillW, (int)barH,
-                               (Color){0, 140, 60, 255}, (Color){0, 220, 100, 255});
+        DrawRectangleGradientH((int)barX, (int)barY, fillW, (int)barH,(Color){0, 140, 60, 255}, (Color){0, 220, 100, 255});
 
     if (fillW > 4)
-        DrawRectangle((int)barX + 2, (int)barY + 2, fillW - 4, 7,
-                      (Color){180, 255, 200, 35});
+        DrawRectangle((int)barX + 2, (int)barY + 2, fillW - 4, 7,(Color){180, 255, 200, 35});
 
     DrawRectangleLinesEx((Rectangle){barX, barY, barW, barH}, 2, (Color){55, 55, 88, 255});
 
     char pctText[8];
     snprintf(pctText, sizeof(pctText), "%d%%", (int)(progress * 100.0f));
     Vector2 pt = MeasureTextEx(font, pctText, 22, 1);
-    DrawTextEx(font, pctText,
-               (Vector2){barX + (barW - pt.x) * 0.5f, barY + (barH - pt.y) * 0.5f},
-               22, 1, WHITE);
+    DrawTextEx(font, pctText,(Vector2){barX + (barW - pt.x) * 0.5f, barY + (barH - pt.y) * 0.5f},22, 1, WHITE);
 
     const char *dots[] = {
         "Пожалуйста, подождите.",
@@ -495,9 +452,7 @@ static void DrawGenerating(Font font, Screen *screen, int *px, int *py)
     };
     int dotIdx = (int)(gen_timer * 2.5f) % 3;
     Vector2 sub = MeasureTextEx(font, dots[dotIdx], 22, 1);
-    DrawTextEx(font, dots[dotIdx],
-               (Vector2){(1920 - sub.x) * 0.5f, barY + barH + 26},
-               22, 1, (Color){80, 80, 120, 255});
+    DrawTextEx(font, dots[dotIdx],(Vector2){(1920 - sub.x) * 0.5f, barY + barH + 26},22, 1, (Color){80, 80, 120, 255});
 
     if (gen_timer >= GEN_DURATION)
     {
@@ -585,11 +540,7 @@ static void DrawPlaying(Font font, Screen *screen, int *px, int *py)
             else
                 col = (Color){8, 8, 20, 255};
 
-            DrawRectangleV(
-                (Vector2){offX + c * cellSize, offY + r * cellSize},
-                (Vector2){cellSize, cellSize},
-                col
-            );
+            DrawRectangleV((Vector2){offX + c * cellSize, offY + r * cellSize},(Vector2){cellSize, cellSize},col);
         }
     }
 
@@ -598,18 +549,12 @@ static void DrawPlaying(Font font, Screen *screen, int *px, int *py)
     if (cellSize >= 10.0f)
     {
         Vector2 ev = MeasureTextEx(font, "В", cellSize * 0.55f, 1);
-        DrawTextEx(font, "В",
-            (Vector2){offX + (int)x_end * cellSize + (cellSize - ev.x) * 0.5f,
-                      offY + (int)y_end * cellSize + (cellSize - ev.y) * 0.5f},
-            cellSize * 0.55f, 1, (Color){0, 255, 100, 255});
+        DrawTextEx(font, "В",(Vector2){offX + (int)x_end * cellSize + (cellSize - ev.x) * 0.5f,offY + (int)y_end * cellSize + (cellSize - ev.y) * 0.5f},cellSize * 0.55f, 1, (Color){0, 255, 100, 255});
     }
 
     float margin = cellSize * 0.12f;
     float ps = cellSize - 2.0f * margin;
-    DrawRectangleV(
-        (Vector2){offX + *px * cellSize + margin, offY + *py * cellSize + margin},
-        (Vector2){ps, ps},
-        (Color){80, 140, 255, 255}
+    DrawRectangleV((Vector2){offX + *px * cellSize + margin, offY + *py * cellSize + margin},(Vector2){ps, ps},(Color){80, 140, 255, 255}
     );
 
     char tbuf[20];
@@ -617,19 +562,11 @@ static void DrawPlaying(Font font, Screen *screen, int *px, int *py)
     char tdisp[40];
     snprintf(tdisp, sizeof(tdisp), "Время: %s", tbuf);
     Vector2 td = MeasureTextEx(font, tdisp, 20, 1);
-    DrawTextEx(font, tdisp,
-        (Vector2){(1920.0f - td.x) * 0.5f, 12.0f},
-        20, 1,
-        (Color){200, 200, 220, 220}
-    );
+    DrawTextEx(font, tdisp,(Vector2){(1920.0f - td.x) * 0.5f, 12.0f},20, 1,(Color){200, 200, 220, 220});
 
     char nameLabel[48];
     snprintf(nameLabel, sizeof(nameLabel), "Игрок: %s", login_name);
-    DrawTextEx(font, nameLabel,
-        (Vector2){1920.0f - 300.0f, 12.0f},
-        18, 1,
-        (Color){80, 180, 120, 180}
-    );
+    DrawTextEx(font, nameLabel,(Vector2){1920.0f - 300.0f, 12.0f},18, 1,(Color){80, 180, 120, 180});
 
     Rectangle menuBtn = {20.0f, 14.0f, 170.0f, 40.0f};
     Vector2 m = GetMousePosition();
@@ -638,10 +575,7 @@ static void DrawPlaying(Font font, Screen *screen, int *px, int *py)
     DrawRectangleLinesEx(menuBtn, 2, hotMenu ? WHITE : GRAY);
     const char *menuLabel = "< МЕНЮ";
     Vector2 mt = MeasureTextEx(font, menuLabel, 18, 1);
-    DrawTextEx(font, menuLabel,
-        (Vector2){menuBtn.x + (menuBtn.width - mt.x) * 0.5f,
-                  menuBtn.y + (menuBtn.height - mt.y) * 0.5f},
-        18, 1, LIGHTGRAY);
+    DrawTextEx(font, menuLabel,(Vector2){menuBtn.x + (menuBtn.width - mt.x) * 0.5f, menuBtn.y + (menuBtn.height - mt.y) * 0.5f},18, 1, LIGHTGRAY);
     if (hotMenu && IsMouseButtonPressed(MOUSE_LEFT_BUTTON))
     {
         show_solution = 0;
@@ -658,10 +592,7 @@ static void DrawPlaying(Font font, Screen *screen, int *px, int *py)
     DrawRectangleLinesEx(autoBtn, 2, hotAuto ? WHITE : (Color){220, 60, 60, 255});
     const char *autoLabel = show_solution ? "СКРЫТЬ ПУТЬ" : "АВТО-ПРОХОД";
     Vector2 alt = MeasureTextEx(font, autoLabel, 20, 1);
-    DrawTextEx(font, autoLabel,
-        (Vector2){autoBtn.x + (autoBtn.width - alt.x) * 0.5f,
-                  autoBtn.y + (autoBtn.height - alt.y) * 0.5f},
-        20, 1, WHITE);
+    DrawTextEx(font, autoLabel,(Vector2){autoBtn.x + (autoBtn.width - alt.x) * 0.5f,autoBtn.y + (autoBtn.height - alt.y) * 0.5f},20, 1, WHITE);
     if (hotAuto && IsMouseButtonPressed(MOUSE_LEFT_BUTTON))
     {
         show_solution = !show_solution;
@@ -669,12 +600,7 @@ static void DrawPlaying(Font font, Screen *screen, int *px, int *py)
             reset_path_marks();
     }
 
-    DrawTextEx(font,
-        "WASD / стрелки - движение     R - рестарт     M - настройки",
-        (Vector2){20.0f, 1056.0f},
-        16, 1,
-        (Color){70, 70, 100, 255}
-    );
+    DrawTextEx(font,"WASD / стрелки - движение     R - рестарт     M - настройки",(Vector2){20.0f, 1056.0f},16, 1,(Color){70, 70, 100, 255});
 
     if (won)
     {
@@ -688,24 +614,18 @@ static void DrawPlaying(Font font, Screen *screen, int *px, int *py)
 
         const char *msgWin = "ВЫХОД НАЙДЕН!";
         Vector2 wt = MeasureTextEx(font, msgWin, 80, 1);
-        DrawTextEx(font, msgWin,
-            (Vector2){(1920.0f - wt.x) * 0.5f, 420.0f},
-            80, 1, (Color){0, 220, 80, 255});
+        DrawTextEx(font, msgWin,(Vector2){(1920.0f - wt.x) * 0.5f, 420.0f},80, 1, (Color){0, 220, 80, 255});
 
         char winTime[32];
         fmt_time(play_elapsed, winTime, sizeof(winTime));
         char winLine[64];
         snprintf(winLine, sizeof(winLine), "Ваше время: %s", winTime);
         Vector2 wlt = MeasureTextEx(font, winLine, 30, 1);
-        DrawTextEx(font, winLine,
-            (Vector2){(1920.0f - wlt.x) * 0.5f, 520.0f},
-            30, 1, (Color){255, 215, 50, 255});
+        DrawTextEx(font, winLine,(Vector2){(1920.0f - wlt.x) * 0.5f, 520.0f},30, 1, (Color){255, 215, 50, 255});
 
         const char *msgSub = "R - новый лабиринт     M - к настройкам";
         Vector2 st = MeasureTextEx(font, msgSub, 30, 1);
-        DrawTextEx(font, msgSub,
-            (Vector2){(1920.0f - st.x) * 0.5f, 580.0f},
-            30, 1, LIGHTGRAY);
+        DrawTextEx(font, msgSub,(Vector2){(1920.0f - st.x) * 0.5f, 580.0f},30, 1, LIGHTGRAY);
 
         if (IsKeyPressed(KEY_R))
         {
@@ -746,15 +666,13 @@ static void DrawLeaderboard(Font font, Screen *screen)
     DrawBackButton(font, m, backBtn, "< МЕНЮ", screen, MENU);
 
     Vector2 ts = MeasureTextEx(font, "ЛИДЕРБОРД", 52, 1);
-    DrawTextEx(font, "ЛИДЕРБОРД",
-        (Vector2){(1920 - ts.x) * 0.5f, 76}, 52, 1, WHITE);
+    DrawTextEx(font, "ЛИДЕРБОРД",(Vector2){(1920 - ts.x) * 0.5f, 76}, 52, 1, WHITE);
     DrawRectangle(1920 / 2 - 320, 148, 640, 2, (Color){255,180,30,100});
 
     if (leaderboard_count == 0)
     {
         Vector2 es = MeasureTextEx(font, "Пока нет записей. Пройдите лабиринт!", 30, 1);
-        DrawTextEx(font, "Пока нет записей. Пройдите лабиринт!",
-            (Vector2){(1920 - es.x) * 0.5f, 510}, 30, 1, (Color){120,120,140,255});
+        DrawTextEx(font, "Пока нет записей. Пройдите лабиринт!",(Vector2){(1920 - es.x) * 0.5f, 510}, 30, 1, (Color){120,120,140,255});
         return;
     }
 
@@ -815,11 +733,9 @@ static void DrawAbout(Font font, Screen *screen)
     DrawTextEx(font, "ВУЗ:",(Vector2){1920*0.15f, 446}, 22, 1, GRAY);
     DrawTextEx(font, "СПбГУ им. Петра Великого", (Vector2){1920*0.15f+200, 446}, 22, 1, WHITE);
     DrawTextEx(font, "Институт:", (Vector2){1920*0.15f, 500}, 22, 1, GRAY);
-    DrawTextEx(font, "Институт компьютерных наук и кибербезопасности",
-               (Vector2){1920*0.15f+200, 500}, 22, 1, WHITE);
+    DrawTextEx(font, "Институт компьютерных наук и кибербезопасности",(Vector2){1920*0.15f+200, 500}, 22, 1, WHITE);
     DrawTextEx(font, "Кафедра:",(Vector2){1920*0.15f, 554}, 22, 1, GRAY);
-    DrawTextEx(font, "Высшая Школа Кибербезопасности",
-               (Vector2){1920*0.15f+200, 554}, 22, 1, WHITE);
+    DrawTextEx(font, "Высшая Школа Кибербезопасности",(Vector2){1920*0.15f+200, 554}, 22, 1, WHITE);
 }
 
 
@@ -836,14 +752,10 @@ static void DrawHelp(Font font, Screen *screen)
 
     DrawTextEx(font, "ПРАВИЛА ИГРЫ", (Vector2){1920*0.12f, 180}, 28, 1, (Color){40,190,210,255});
     DrawRectangle(1920*0.12f, 216, 700, 1, (Color){60,60,90,255});
-    DrawTextEx(font, "Цель - провести своего персонажа от стартовой точки до выхода из лабиринта.",
-               (Vector2){1920*0.12f, 230}, 22, 1, WHITE);
-    DrawTextEx(font, "Лабиринт генерируется случайно, но всегда имеет единственное решение.",
-               (Vector2){1920*0.12f, 268}, 22, 1, WHITE);
-    DrawTextEx(font, "Размер лабиринта задаётся вручную: ширина и высота от 3 до 100 клеток.",
-               (Vector2){1920*0.12f, 306}, 22, 1, (Color){255,220,80,255});
-    DrawTextEx(font, "Значения больше 100 автоматически обрезаются до 0.",
-               (Vector2){1920*0.12f, 344}, 22, 1, (Color){180,180,180,255});
+    DrawTextEx(font, "Цель - провести своего персонажа от стартовой точки до выхода из лабиринта.",(Vector2){1920*0.12f, 230}, 22, 1, WHITE);
+    DrawTextEx(font, "Лабиринт генерируется случайно, но всегда имеет единственное решение.",(Vector2){1920*0.12f, 268}, 22, 1, WHITE);
+    DrawTextEx(font, "Размер лабиринта задаётся вручную: ширина и высота от 3 до 100 клеток.",(Vector2){1920*0.12f, 306}, 22, 1, (Color){255,220,80,255});
+    DrawTextEx(font, "Значения больше 100 автоматически обрезаются до 0.",(Vector2){1920*0.12f, 344}, 22, 1, (Color){180,180,180,255});
 
     DrawTextEx(font, "УПРАВЛЕНИЕ", (Vector2){1920*0.12f, 410}, 28, 1, (Color){40,190,210,255});
     DrawRectangle(1920*0.12f, 446, 700, 1, (Color){60,60,90,255});
@@ -887,9 +799,6 @@ static void DrawKeyInput(Font font, Screen *screen)
     DrawTextEx(font,"Функция в разработке...",(Vector2){(1920-sub.x)*0.5f, 540}, 32, 1, (Color){120,120,140,255});
 }
 
-static void AutoSolve(){
-
-}
 //запуск
 void RunMazeGenerator(void)
 {
