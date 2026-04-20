@@ -4,7 +4,7 @@
 #include <string.h>
 #include <stdlib.h>
 
-void db_save(const char *name, float time_sec, long long seed)
+void db_save(const char *name, float time_sec, long long seed, int width, int height)
 {
     FILE *main_f = fopen(DB_FILE, "r");
     FILE *temp_f = fopen(DB_TEMP, "w");
@@ -18,23 +18,28 @@ void db_save(const char *name, float time_sec, long long seed)
     char found_name[33] = {0};
     float found_time = 0.0f;
     long long found_seed = 0;
+    int found_w = 0, found_h = 0;
     int found = 0;
 
     if (main_f) {
         char line_name[33];
         float line_time;
         long long line_seed;
+        int line_w, line_h;
 
-        while (fscanf(main_f, "%32s %f %lld",
-                      line_name, &line_time, &line_seed) == 3) {
+        while (fscanf(main_f, "%32s %f %lld %d %d",
+                      line_name, &line_time, &line_seed, &line_w, &line_h) == 5) {
             if (strcmp(line_name, name) == 0) {
                 strncpy(found_name, line_name, 32);
                 found_name[32] = '\0';
                 found_time = line_time;
                 found_seed = line_seed;
+                found_w = line_w;
+                found_h = line_h;
                 found = 1;
             } else {
-                fprintf(temp_f, "%s %.3f %lld\n", line_name, line_time, line_seed);
+                fprintf(temp_f, "%s %.3f %lld %d %d\n",
+                        line_name, line_time, line_seed, line_w, line_h);
             }
         }
         fclose(main_f);
@@ -60,15 +65,17 @@ void db_save(const char *name, float time_sec, long long seed)
 
     float best_time = time_sec;
     long long best_seed = seed;
+    int best_w = width, best_h = height;
 
     if (found && found_time < time_sec) {
         best_time = found_time;
         best_seed = found_seed;
+        best_w = found_w;
+        best_h = found_h;
     }
 
-    fprintf(main_f, "%s %.3f %lld\n", name, best_time, best_seed);
+    fprintf(main_f, "%s %.3f %lld %d %d\n", name, best_time, best_seed, best_w, best_h);
     fclose(main_f);
-
     remove(DB_TEMP);
 }
 
@@ -79,22 +86,21 @@ int db_load(DBEntry *out, int max_count)
 
     int count = 0;
     while (count < max_count &&
-           fscanf(f, "%32s %f %lld",out[count].name,&out[count].time_sec,&out[count].seed) == 3)
+           fscanf(f, "%32s %f %lld %d %d",
+                  out[count].name, &out[count].time_sec,
+                  &out[count].seed, &out[count].width, &out[count].height) == 5)
     {
         out[count].name[32] = '\0';
         count++;
     }
     fclose(f);
 
-    for (int i = 0; i < count - 1; i++) {
-        for (int j = i + 1; j < count; j++) {
+    //сортировка по времени
+    for (int i = 0; i < count - 1; i++)
+        for (int j = i + 1; j < count; j++)
             if (out[j].time_sec < out[i].time_sec) {
-                DBEntry tmp = out[i];
-                out[i] = out[j];
-                out[j] = tmp;
+                DBEntry tmp = out[i]; out[i] = out[j]; out[j] = tmp;
             }
-        }
-    }
 
     return count;
 }

@@ -9,10 +9,11 @@ typedef struct {
     char name[33];
     float time_sec;
     long long seed;
+    int width;
+    int height;
 } DBEntry;
 
-void db_save(const char *name, float time_sec, long long seed);
-
+void db_save(const char *name, float time_sec, long long seed, int width, int height);
 int  db_load(DBEntry *out, int max_count);
 
 #endif /* DB_H */

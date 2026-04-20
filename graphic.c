@@ -668,7 +668,7 @@ static void DrawPlaying(Font font, Screen *screen, int *px, int *py)
     //победа
     if (won) {
         if (!score_saved) {
-            db_save(login_name, play_elapsed, current_seed);
+            db_save(login_name, play_elapsed, current_seed, (int)map_width, (int)map_height);
             score_saved = 1;
         }
 
@@ -731,60 +731,105 @@ static void DrawPlaying(Font font, Screen *screen, int *px, int *py)
 //leaderboard
 static void DrawLeaderboard(Font font, Screen *screen)
 {
+    static int lb_scroll = 0;
+
     Rectangle backBtn = {20, 20, 170, 44};
     Vector2 m = GetMousePosition();
     DrawBackButton(font, m, backBtn, "< МЕНЮ", screen, MENU);
+
+    //сброс прокрутки
+    static Screen prev_screen = MENU;
+    if (prev_screen != LEADERBOARD) { lb_scroll = 0; }
+    prev_screen = LEADERBOARD;
 
     Vector2 ts = MeasureTextEx(font, "ЛИДЕРБОРД", 52, 1);
     DrawTextEx(font, "ЛИДЕРБОРД",
                (Vector2){(1920 - ts.x) * 0.5f, 76}, 52, 1, WHITE);
     DrawRectangle(1920 / 2 - 320, 148, 640, 2, (Color){255,180,30,100});
 
-    //load
     static DBEntry entries[DB_MAX_ENTRIES];
     int count = db_load(entries, DB_MAX_ENTRIES);
 
     if (count == 0) {
-        Vector2 es = MeasureTextEx(font, "Пока нет записей. Пройдите лабиринт!", 30, 1);
+        Vector2 es = MeasureTextEx(font,
+            "Пока нет записей. Пройдите лабиринт!", 30, 1);
         DrawTextEx(font, "Пока нет записей. Пройдите лабиринт!",
-                   (Vector2){(1920 - es.x) * 0.5f, 510}, 30, 1, (Color){120,120,140,255});
+                   (Vector2){(1920 - es.x) * 0.5f, 510},
+                   30, 1, (Color){120,120,140,255});
         return;
     }
 
-    //top 10
-    int show = count < 10 ? count : 10;
+    float startY= 200.0f;
+    float rowH = 52.0f;
+    float tableBottom = 1060.0f;
+    int visibleRows = (int)((tableBottom - startY - rowH) / (rowH + 2.0f));
 
-    float startY = 200.0f;
-    float rowH = 56.0f;
-    float col1 = 130.0f, col2 = 300.0f, col3 = 1080.0f, col4 = 1480.0f;
+    //прокрутка
+    int wheel = (int)GetMouseWheelMove();
+    lb_scroll -= wheel;
+    if (lb_scroll < 0) lb_scroll = 0;
+    int maxScroll = count - visibleRows;
+    if (maxScroll < 0) maxScroll = 0;
+    if (lb_scroll > maxScroll) lb_scroll = maxScroll;
 
-    //заголовок
+    
+    float col1 = 130.0f;   //#
+    float col2 = 300.0f;   //name
+    float col3 = 920.0f;   //time
+    float col4 = 1200.0f;  //wxh
+    float col5 = 1480.0f; //seed
+
+    /* заголовок таблицы */
     DrawRectangle(100, (int)startY, 1720, (int)rowH, (Color){28,28,52,255});
-    DrawTextEx(font, "#", (Vector2){col1, startY + 16}, 22, 1, (Color){255,180,30,255});
-    DrawTextEx(font, "Имя", (Vector2){col2, startY + 16}, 22, 1, (Color){255,180,30,255});
-    DrawTextEx(font, "Время", (Vector2){col3, startY + 16}, 22, 1, (Color){255,180,30,255});
-    DrawTextEx(font, "Seed", (Vector2){col4, startY + 16}, 22, 1, (Color){255,180,30,255});
+    DrawTextEx(font, "#", (Vector2){col1, startY + 14}, 22, 1, (Color){255,180,30,255});
+    DrawTextEx(font, "Имя", (Vector2){col2, startY + 14}, 22, 1, (Color){255,180,30,255});
+    DrawTextEx(font, "Время", (Vector2){col3, startY + 14}, 22, 1, (Color){255,180,30,255});
+    DrawTextEx(font, "Размер", (Vector2){col4, startY + 14}, 22, 1, (Color){255,180,30,255});
+    DrawTextEx(font, "Seed", (Vector2){col5, startY + 14}, 22, 1, (Color){255,180,30,255});
     DrawRectangle(100, (int)(startY + rowH), 1720, 2, (Color){80,80,110,255});
 
-    for (int i = 0; i < show; i++) {
+   //строки с учетом прокрутки
+    int drawCount = visibleRows;
+    if (lb_scroll + drawCount > count) drawCount = count - lb_scroll;
+
+    for (int i = 0; i < drawCount; i++) {
+        int realIdx = i + lb_scroll;         //ранг
         float ry = startY + rowH + 4.0f + (float)i * (rowH + 2.0f);
-        Color rowBg = (i % 2 == 0) ? (Color){14,14,28,220} : (Color){22,22,42,220};
+
+        Color rowBg = (realIdx % 2 == 0)
+            ? (Color){14,14,28,220}
+            : (Color){22,22,42,220};
         DrawRectangle(100, (int)ry, 1720, (int)rowH, rowBg);
 
         Color nc = WHITE;
-        if (i == 0) nc = (Color){255,215,0,255};
-        if (i == 1) nc = (Color){192,192,192,255};
-        if (i == 2) nc = (Color){205,127,50,255};
+        if (realIdx == 0) nc = (Color){255,215,0,255};
+        if (realIdx == 1) nc = (Color){192,192,192,255};
+        if (realIdx == 2) nc = (Color){205,127,50,255};
 
-        char rankBuf[8], timeBuf[20], seedBuf[28];
-        snprintf(rankBuf, sizeof(rankBuf), "%d", i + 1);
-        fmt_time(entries[i].time_sec, timeBuf, sizeof(timeBuf));
-        snprintf(seedBuf, sizeof(seedBuf), "%lld", entries[i].seed);
+        char rankBuf[8], timeBuf[20], seedBuf[28], sizeBuf[16];
+        snprintf(rankBuf, sizeof(rankBuf), "%d", realIdx + 1);
+        fmt_time(entries[realIdx].time_sec, timeBuf, sizeof(timeBuf));
+        snprintf(seedBuf, sizeof(seedBuf), "%lld", entries[realIdx].seed);
+        snprintf(sizeBuf, sizeof(sizeBuf), "%dx%d",
+                 entries[realIdx].width, entries[realIdx].height);
 
-        DrawTextEx(font, rankBuf, (Vector2){col1, ry + 16}, 22, 1, nc);
-        DrawTextEx(font, entries[i].name,(Vector2){col2, ry + 16}, 22, 1, WHITE);
-        DrawTextEx(font, timeBuf, (Vector2){col3, ry + 16}, 22, 1, (Color){80,220,120,255});
-        DrawTextEx(font, seedBuf,  (Vector2){col4, ry + 16}, 22, 1, (Color){150,150,170,255});
+        DrawTextEx(font, rankBuf, (Vector2){col1, ry + 14}, 22, 1, nc);
+        DrawTextEx(font, entries[realIdx].name,(Vector2){col2, ry + 14}, 22, 1, WHITE);
+        DrawTextEx(font, timeBuf,(Vector2){col3, ry + 14}, 22, 1, (Color){80,220,120,255});
+        DrawTextEx(font, sizeBuf, (Vector2){col4, ry + 14}, 22, 1, (Color){100,180,255,255});
+        DrawTextEx(font, seedBuf, (Vector2){col5, ry + 14}, 22, 1, (Color){150,150,170,255});
+    }
+
+    //прокрутка
+    if (count > visibleRows) {
+        char scrollInfo[32];
+        snprintf(scrollInfo, sizeof(scrollInfo),
+                 "↑↓ колесо  |  %d - %d из %d",
+                 lb_scroll + 1, lb_scroll + drawCount, count);
+        Vector2 si = MeasureTextEx(font, scrollInfo, 18, 1);
+        DrawTextEx(font, scrollInfo,
+                   (Vector2){(1920 - si.x) * 0.5f, tableBottom + 8},
+                   18, 1, (Color){100,100,130,255});
     }
 }
 
