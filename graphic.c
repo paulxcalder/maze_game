@@ -345,7 +345,11 @@ static void DrawGame(Font font, Screen *screen,
         if (CheckCollisionPointRec(m, widthBox))       { *active = 0; }
         else if (CheckCollisionPointRec(m, heightBox)) { *active = 1; }
         else if (CheckCollisionPointRec(m, genBtn)) {
-            if (*inputW >= 3 && *inputH >= 3) {
+            if(*inputH * 2 < *inputW || *inputW * 2 < *inputH){
+                log_error("DrawGame: one of input parametrs cannot be more/less 2 times");
+                *errorFlag = 4;
+            }
+            else if (*inputW >= 3 && *inputH >= 3) {
                 *errorFlag = 0;
                 current_seed = (long long)time(NULL);
                 free_map();
@@ -431,6 +435,12 @@ static void DrawGame(Font font, Screen *screen,
             "Не удалось создать лабиринт. Попробуйте другой размер.", 22, 1);
         DrawTextEx(font,
             "Не удалось создать лабиринт. Попробуйте другой размер.",
+            (Vector2){(1920 - errt.x) * 0.5f, 500}, 22, 1, RED);
+    } else if(*errorFlag == 4){
+        Vector2 errt = MeasureTextEx(font,
+            "Не удалось создать лабиринт. Соотношение сторон не должно превышать 2 и более.", 22, 1);
+        DrawTextEx(font,
+            "Не удалось создать лабиринт. Соотношение сторон не должно превышать 2 и более.",
             (Vector2){(1920 - errt.x) * 0.5f, 500}, 22, 1, RED);
     }
 }
@@ -1019,7 +1029,10 @@ static void DrawKeyInput(Font font, Screen *screen, int *px, int *py)
 
     char doGen = (hotGen && IsMouseButtonPressed(MOUSE_LEFT_BUTTON))|| IsKeyPressed(KEY_ENTER);
     if (doGen) {
-        if (key_inputW < 3 || key_inputH < 3) {
+        if(key_inputH * 2 < key_inputW || key_inputW * 2 < key_inputH){
+            key_errorFlag = 4;
+        }
+        else if (key_inputW < 3 || key_inputH < 3) {
             key_errorFlag = 1;
         } else if (key_seed_len == 0) {
             key_errorFlag = 2;
@@ -1057,6 +1070,7 @@ static void DrawKeyInput(Font font, Screen *screen, int *px, int *py)
     if (key_errorFlag == 1) errMsg = "Размер должен быть не менее 3!";
     else if (key_errorFlag == 2) errMsg = "Введите seed!";
     else if (key_errorFlag == 3) errMsg = "Не удалось создать лабиринт. Попробуйте другой seed.";
+    else if(key_errorFlag == 4) errMsg = "Одна размерность не может отличаться от другой более чем в 2 раза!";
 
     if (errMsg) {
         Vector2 et = MeasureTextEx(font, errMsg, 22, 1);
