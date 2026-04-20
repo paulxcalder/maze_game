@@ -31,7 +31,7 @@ static char login_len = 0;
 static char login_error = 0; //0 - все хорошо   1 все плохо
 
 static char **map  = NULL;
-static size_l map_width  = 0;
+static size_l map_width = 0;
 static size_l map_height = 0;
 static int x_end = -1;
 static int y_end = -1;
@@ -57,8 +57,7 @@ static char key_errorFlag = 0;
 
 
 //наход end 
-static void find_end_pos(void)
-{
+static void find_end_pos(void)  {
     x_end = -1;
     y_end = -1;
     if (!map) return;
@@ -88,8 +87,7 @@ static void fmt_time(float t, char *buf, size_t n)
 }
 
 //назад
-static void DrawBackButton(Font font, Vector2 m, Rectangle backBtn,
-                           const char *label, Screen *screen, Screen target)
+static void DrawBackButton(Font font, Vector2 m, Rectangle backBtn,const char *label, Screen *screen, Screen target)
 {
     char hot = CheckCollisionPointRec(m, backBtn);
     DrawRectangleRec(backBtn, hot ? (Color){55,55,68,255} : (Color){35,35,48,255});
@@ -102,7 +100,6 @@ static void DrawBackButton(Font font, Vector2 m, Rectangle backBtn,
     if (hot && IsMouseButtonPressed(MOUSE_LEFT_BUTTON))
         *screen = target;
 }
-
 
 //меню
 static void DrawMenu(Font font, Screen *screen)
@@ -330,9 +327,7 @@ static void DrawModeSelect(Font font, Screen *screen)
     }
 }
 //настройки игры
-static void DrawGame(Font font, Screen *screen,
-                     int *inputW, int *inputH,
-                     int *active, int *px, int *py, int *errorFlag)
+static void DrawGame(Font font, Screen *screen,int *inputW, int *inputH,int *active, int *px, int *py, int *errorFlag)
 {
     Rectangle backBtn = {20, 20, 170, 44};
     Rectangle widthBox = {384, 238, 220, 52};
@@ -345,7 +340,11 @@ static void DrawGame(Font font, Screen *screen,
         if (CheckCollisionPointRec(m, widthBox))       { *active = 0; }
         else if (CheckCollisionPointRec(m, heightBox)) { *active = 1; }
         else if (CheckCollisionPointRec(m, genBtn)) {
-            if (*inputW >= 3 && *inputH >= 3) {
+            if(*inputH * 2 < *inputW || *inputW * 2 < *inputH){
+                log_error("DrawGame: one of input parametrs cannot be more/less 2 times");
+                *errorFlag = 4;
+            }
+            else if (*inputW >= 3 && *inputH >= 3) {
                 *errorFlag = 0;
                 current_seed = (long long)time(NULL);
                 free_map();
@@ -431,6 +430,12 @@ static void DrawGame(Font font, Screen *screen,
             "Не удалось создать лабиринт. Попробуйте другой размер.", 22, 1);
         DrawTextEx(font,
             "Не удалось создать лабиринт. Попробуйте другой размер.",
+            (Vector2){(1920 - errt.x) * 0.5f, 500}, 22, 1, RED);
+    } else if(*errorFlag == 4){
+        Vector2 errt = MeasureTextEx(font,
+            "Не удалось создать лабиринт. Соотношение сторон не должно превышать 2 и более.", 22, 1);
+        DrawTextEx(font,
+            "Не удалось создать лабиринт. Соотношение сторон не должно превышать 2 и более.",
             (Vector2){(1920 - errt.x) * 0.5f, 500}, 22, 1, RED);
     }
 }
@@ -562,7 +567,7 @@ static void DrawPlaying(Font font, Screen *screen, int *px, int *py)
     float offX = (1920.0f - mazePixW) * 0.5f;
     float offY = (1080.0f - mazePixH) * 0.5f;
 
-    //отрисовка карты
+    //отрисовка карты 144fps * 100 * 100 + время на отрисовку одной клетки 1440000
     for (int r = 0; r < (int)map_height; r++) {
         for (int c = 0; c < (int)map_width; c++) {
             Color col;
@@ -855,8 +860,7 @@ static void DrawAbout(Font font, Screen *screen)
     DrawTextEx(font, "Год:",     (Vector2){1920*0.15f,        392}, 22, 1, GRAY);
     DrawTextEx(font, "2026",     (Vector2){1920*0.15f + 200,  392}, 22, 1, WHITE);
     DrawTextEx(font, "ВУЗ:",     (Vector2){1920*0.15f,        446}, 22, 1, GRAY);
-    DrawTextEx(font, "СПбГУ им. Петра Великого",
-                                 (Vector2){1920*0.15f + 200,  446}, 22, 1, WHITE);
+    DrawTextEx(font, "СПбГУ им. Петра Великого",(Vector2){1920*0.15f + 200,  446}, 22, 1, WHITE);
     DrawTextEx(font, "Институт:",(Vector2){1920*0.15f,        500}, 22, 1, GRAY);
     DrawTextEx(font, "Институт компьютерных наук и кибербезопасности",
                                  (Vector2){1920*0.15f + 200,  500}, 22, 1, WHITE);
@@ -1019,7 +1023,10 @@ static void DrawKeyInput(Font font, Screen *screen, int *px, int *py)
 
     char doGen = (hotGen && IsMouseButtonPressed(MOUSE_LEFT_BUTTON))|| IsKeyPressed(KEY_ENTER);
     if (doGen) {
-        if (key_inputW < 3 || key_inputH < 3) {
+        if(key_inputH * 2 < key_inputW || key_inputW * 2 < key_inputH){
+            key_errorFlag = 4;
+        }
+        else if (key_inputW < 3 || key_inputH < 3) {
             key_errorFlag = 1;
         } else if (key_seed_len == 0) {
             key_errorFlag = 2;
@@ -1057,6 +1064,7 @@ static void DrawKeyInput(Font font, Screen *screen, int *px, int *py)
     if (key_errorFlag == 1) errMsg = "Размер должен быть не менее 3!";
     else if (key_errorFlag == 2) errMsg = "Введите seed!";
     else if (key_errorFlag == 3) errMsg = "Не удалось создать лабиринт. Попробуйте другой seed.";
+    else if(key_errorFlag == 4) errMsg = "Одна размерность не может отличаться от другой более чем в 2 раза!";
 
     if (errMsg) {
         Vector2 et = MeasureTextEx(font, errMsg, 22, 1);

@@ -1,0 +1,4 @@
+# Logs and runtime stats
+*.log
+*.txt
+*.dat
