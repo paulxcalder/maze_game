@@ -2,3 +2,16 @@
 *.log
 *.txt
 *.dat
+arial.ttf
+DejaVuSansBold.ttf
+driver.c
+labyrinth_before.c
+labyrinth_count_after.c
+labyrinth_count_before.c
+labyrinth_count_new.c
+plots.py
+*.exe
+bp/
+ap/
+graphs/
+mem/
