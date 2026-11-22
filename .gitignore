@@ -15,3 +15,5 @@ bp/
 ap/
 graphs/
 mem/
+draw/
+endpos.c
