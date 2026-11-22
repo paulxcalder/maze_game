@@ -36,6 +36,13 @@ static size_l map_height = 0;
 static int x_end = -1;
 static int y_end = -1;
 
+//текстура с готовым изображением лабиринта: рисуется один раз, а не каждый кадр
+static RenderTexture2D maze_tex;
+static char maze_tex_valid = 0;     //1 - текстура соответствует текущей карте
+static char maze_tex_loaded = 0;    //1 - текстура создана, её надо освободить
+static int maze_tex_solution = -1;  //при каком show_solution нарисована текстура
+
+
 //прогресс бар
 static float gen_timer = 0.0f;
 static char gen_ok = 0; //1 все хорошо 0 - плохо
@@ -76,6 +83,39 @@ static void free_map(void)
     map_height = 0;
     x_end = -1;
     y_end = -1;
+    maze_tex_valid = 0;   //карта удалена - текстуру надо перерисовать
+}
+
+//рисуем всю карту в текстуру; вызывается только когда карта изменилась
+static void build_maze_tex(float cellSize)
+{
+    int texW = (int)(cellSize * (float)map_width + 0.5f);
+    int texH = (int)(cellSize * (float)map_height + 0.5f);
+
+    if (maze_tex_loaded) UnloadRenderTexture(maze_tex);
+    maze_tex = LoadRenderTexture(texW, texH);
+    maze_tex_loaded = 1;
+
+    BeginTextureMode(maze_tex);
+    ClearBackground((Color){8, 8, 20, 255});
+    for (int r = 0; r < (int)map_height; r++) {
+        for (int c = 0; c < (int)map_width; c++) {
+            Color col;
+            if      (map[r][c] == WALL)      col = (Color){38, 38, 62, 255};
+            else if ( map[r][c] == RIGHT_WAY)
+                col = (Color){160, 15, 15, 255};
+            else col = (Color){8,  8,  20, 255};
+
+            DrawRectangleV(
+                (Vector2){c * cellSize, r * cellSize},
+                (Vector2){cellSize, cellSize},
+                col);
+        }
+    }
+    EndTextureMode();
+
+    maze_tex_valid = 1;
+    maze_tex_solution = show_solution;
 }
 
 //datetime
@@ -564,24 +604,19 @@ static void DrawPlaying(Font font, Screen *screen, int *px, int *py)
 
     float mazePixW = cellSize * (float)map_width;
     float mazePixH = cellSize * (float)map_height;
-    float offX = (1920.0f - mazePixW) * 0.5f;
-    float offY = (1080.0f - mazePixH) * 0.5f;
+    //смещение округляем до целого пикселя, чтобы текстура легла точно по сетке пикселей
+    float offX = (float)(int)((1920.0f - mazePixW) * 0.5f);
+    float offY = (float)(int)((1080.0f - mazePixH) * 0.5f);
 
-    //отрисовка карты 144fps * 100 * 100 + время на отрисовку одной клетки 1440000
-    for (int r = 0; r < (int)map_height; r++) {
-        for (int c = 0; c < (int)map_width; c++) {
-            Color col;
-            if      (map[r][c] == WALL)      col = (Color){38, 38, 62, 255};
-            else if ( map[r][c] == RIGHT_WAY)
-                col = (Color){160, 15, 15, 255};
-            else col = (Color){8,  8,  20, 255};
+    //отрисовка карты: перерисовываем текстуру только если карта изменилась,
+    //а каждый кадр выводим одну готовую картинку вместо W*H прямоугольников
+    if (!maze_tex_valid || maze_tex_solution != show_solution)
+        build_maze_tex(cellSize);
 
-            DrawRectangleV(
-                (Vector2){offX + c * cellSize, offY + r * cellSize},
-                (Vector2){cellSize, cellSize},
-                col);
-        }
-    }
+    //высота отрицательная: в OpenGL текстура хранится перевёрнутой
+    DrawTextureRec(maze_tex.texture,
+                   (Rectangle){0, 0, (float)maze_tex.texture.width, -(float)maze_tex.texture.height},
+                   (Vector2){offX, offY}, WHITE);
 
     //start
     DrawRectangleV((Vector2){offX + 1 * cellSize, offY + 1 * cellSize},
@@ -1080,7 +1115,7 @@ void RunMazeGenerator(void)
     int malloc_count, realloc_count, calloc_count, free_count;
     InitWindow(1920, 1080, "Maze Generator");
     SetExitKey(KEY_ESCAPE);
-    SetTargetFPS(60);
+    SetTargetFPS(0);
 
     //ascii + кириллица
     int cp[220], n = 0;
@@ -1152,6 +1187,7 @@ void RunMazeGenerator(void)
     log_close();
 
     free_map();
+    if (maze_tex_loaded) UnloadRenderTexture(maze_tex);
     UnloadFont(font);
     FILE* f_mem = fopen("memstat.txt", "w");
     if(f_mem != NULL){
