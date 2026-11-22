@@ -13,14 +13,12 @@ static int _free_count = 0;
 static size_l lab_width = 0;
 static size_l lab_height = 0;
 
+//все клетки лежат одним блоком, на его начало указывает map[0]
 void free_lab(char **map, size_l height){
+    (void)height;   //высота больше не нужна, параметр оставлен для совместимости
     if(map != NULL){
-        for(size_l i = 0; i < height; i++){
-            if(map[i] != NULL){
-                free(map[i]);
-                _free_count++;
-            }
-        }
+        free(map[0]);
+        _free_count++;
         free(map);
         _free_count++;
     }
@@ -86,14 +84,19 @@ char **generate_lab(long long seed, size_l width, size_l height){
         return NULL;
     }
 
-    for(size_l i = 0; i < height; i++){
-        map[i] = (char*)malloc(width * sizeof(char));
-        _malloc_count++;
+    //один блок под все клетки вместо отдельного malloc на каждую строку
+    char *cells = (char*)malloc((size_t)width * height * sizeof(char));
+    _malloc_count++;
 
-        if(map[i] == NULL){
-            free_lab(map, height);
-            return NULL;
-        }
+    if(cells == NULL){
+        free(map);
+        _free_count++;
+        return NULL;
+    }
+
+    //строки - это просто указатели внутрь общего блока
+    for(size_l i = 0; i < height; i++){
+        map[i] = cells + (size_t)i * width;
     }
 
     do{
