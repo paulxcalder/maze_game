@@ -13,6 +13,10 @@ static int _free_count = 0;
 static size_l lab_width = 0;
 static size_l lab_height = 0;
 
+//координаты клетки выхода, запоминаются при генерации
+static size_l lab_end_x = 0;
+static size_l lab_end_y = 0;
+
 //все клетки лежат одним блоком, на его начало указывает map[0]
 void free_lab(char **map, size_l height){
     (void)height;   //высота больше не нужна, параметр оставлен для совместимости
@@ -140,16 +144,24 @@ char **generate_lab(long long seed, size_l width, size_l height){
         for(size_l j = 1; j < width - 1; j++){
             if(map[height - 2][j] == WAY){
                 map[height - 2][j] = END;
+                lab_end_x = j;
+                lab_end_y = height - 2;
                 need_cell = 0;
                 break;
             }
         }
         if(need_cell){
             map[height - 2][1] = END;
+            lab_end_x = 1;
+            lab_end_y = height - 2;
         }
     }while(!find_way(map, 1, 1, 0));
    
     return map;
+}
+void get_end_pos(size_l *x, size_l *y){
+    *x = lab_end_x;
+    *y = lab_end_y;
 }
 
 void get_memstat(int *malloc_count, int *realloc_count, int *calloc_count, int *free_count){

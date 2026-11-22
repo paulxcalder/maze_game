@@ -12,5 +12,6 @@ void free_lab(char **map, size_l height);
 char find_way(char **map, size_l cur_x, size_l cur_y, char show);
 char **generate_lab(long long seed, size_l width, size_l height);
 void get_memstat(int *malloc_count, int *realloc_count, int *calloc_count, int *free_count);
+void get_end_pos(size_l *x, size_l *y);
 
 #endif

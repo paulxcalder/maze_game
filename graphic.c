@@ -68,11 +68,12 @@ static void find_end_pos(void)  {
     x_end = -1;
     y_end = -1;
     if (!map) return;
-    for (int r = 0; r < (int)map_height; r++)
-        for (int c = 0; c < (int)map_width; c++)
-            if (map[r][c] == END) { x_end = c; y_end = r; return; }
+    //координаты выхода уже известны после генерации - перебор карты не нужен
+    size_l ex, ey;
+    get_end_pos(&ex, &ey);
+    x_end = ex;
+    y_end = ey;
 }
-
 
 //frelab
 static void free_map(void)
