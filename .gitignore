@@ -18,3 +18,5 @@ mem/
 draw/
 endpos.c
 endp/
+complexity.c
+labyrinth_algo.c

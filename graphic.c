@@ -1116,7 +1116,7 @@ void RunMazeGenerator(void)
     int malloc_count, realloc_count, calloc_count, free_count;
     InitWindow(1920, 1080, "Maze Generator");
     SetExitKey(KEY_ESCAPE);
-    SetTargetFPS(0);
+    SetTargetFPS(60);
 
     //ascii + кириллица
     int cp[220], n = 0;
